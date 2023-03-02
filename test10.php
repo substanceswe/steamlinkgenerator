@@ -57,8 +57,8 @@
                     $app_details_url = "https://store.steampowered.com/api/appdetails?appids={$app_id}&key=CB704872ED5681101D7726162E8D1461&cc=US&filters=price_overview";
                     $app_details_json = file_get_contents($app_details_url);
                     $app_details_array = json_decode($app_details_json, true);
-                    $price_overview = $app_details_array[$app_id]['data']['price_overview'];
-                    $price_formatted = isset($price_overview) ? '$' . number_format(($price_overview['final']/100), 2) : 'Free to Play';
+                    //$price_overview = $app_details_array[$app_id]['data']['price_overview'];
+                    //$price_formatted = isset($price_overview) ? '$' . number_format(($price_overview['final']/100), 2) : 'Free to Play';
                     $game_url = "https://store.steampowered.com/app/{$app_id}/{$app_name}/";
                     $thumbnail_url = "https://steamcdn-a.akamaihd.net/steam/apps/{$app_id}/capsule_184x69.jpg";
                     $table .= "<tr><td>$num</td><td style='font-size: 16px; text-align: center;'><a href='$game_url'>" . ucwords($app_name) . "</a><br>{$price_formatted}</td><td><a href='$game_url'><img src='$thumbnail_url' alt='Thumbnail for $app_name'></a></td></tr>";
