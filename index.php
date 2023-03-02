@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Steam Link Generator</title>
+    <title>Steam Link Generator - BETA</title>
     <style>
         table {
             border-collapse: collapse;
@@ -26,7 +26,7 @@
     </style>
 </head>
 <body>
-    <h1>Steam Link Generator</h1>
+    <h1>Steam Link Generator - BETA</h1>
     <form method="post">
         <label for="app_names">Enter app names (separated by new row):</label>
         <br>
