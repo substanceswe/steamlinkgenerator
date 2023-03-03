@@ -42,8 +42,16 @@ if(isset($_POST['submit'])){
     $app_names = $_POST['app_names'];
     $app_names_array = preg_split('/\r\n|\r|\n/', $app_names);
 
-    $app_list_url = 'https://api.steampowered.com/ISteamApps/GetAppList/v0002/';
-    $app_list_json = file_get_contents($app_list_url);
+    $app_list_url = 'https://api.steampowered.com/ISteamApps/GetAppList/v0002/?key=CB704872ED5681101D7726162E8D1461?format=json';
+    $cache_file = 'app_list.json';
+    if (file_exists($cache_file) && filemtime($cache_file) > time() - 86400) {
+        // Cached data is available and up to date
+        $app_list_json = file_get_contents($cache_file);
+    } else {
+        // Cached data is not available or out of date, fetch from API and save to cache
+        $app_list_json = file_get_contents($app_list_url);
+        file_put_contents($cache_file, $app_list_json);
+    }
     $app_list_array = json_decode($app_list_json, true);
     $app_list = $app_list_array['applist']['apps'];
 
@@ -61,14 +69,8 @@ if(isset($_POST['submit'])){
         if (empty($app_id)) {
             $game_name = ucwords($app_name) . " (Not found on Steam)";
             $thumbnail_url = "https://via.placeholder.com/184x69?text=No+Thumbnail";
-            $price_formatted = "N/A";
         } else {
-            $app_details_url = "https://store.steampowered.com/api/appdetails?appids={$app_id}&key=CB704872ED5681101D7726162E8D1461&cc=US&filters=price_overview";
-            $app_details_json = file_get_contents($app_details_url);
-            $app_details_array = json_decode($app_details_json, true);
-            $price_overview = $app_details_array[$app_id]['data']['price_overview'];
-            $price_formatted = isset($price_overview) ? '$' . number_format(($price_overview['final']/100), 2) : 'Free to Play';
-            $game_name = "<a href='https://store.steampowered.com/app/{$app_id}/{$app_name}/'>" . ucwords($app_name) . "</a><br>{$price_formatted}";
+            $game_name = "<a href='https://store.steampowered.com/app/{$app_id}/{$app_name}/'>" . ucwords($app_name) . "</a><br>";
             $thumbnail_url = "https://steamcdn-a.akamaihd.net/steam/apps/{$app_id}/capsule_184x69.jpg";
         }
         $table .= "<tr><td>$num</td><td class='game'>$game_name</td><td><a href='https://store.steampowered.com/app/{$app_id}/{$app_name}/'><img src='$thumbnail_url' alt='Thumbnail for $app_name'></a></td></tr>";
